@@ -122,6 +122,29 @@ You should see the one you just updated
 +----------------------------+--------------------------------+-----------+
 ```
 
+Delete a `todo` using it's ID
+
+```bash
+./todo --delete 5e9fd6b1bcd2fa6bd267d4c4,completed
+```
+
+List the `todo`s to confirm
+
+```bash
+./todo --list all
+```
+
+The `todo` you just deleted should not be present
+
+```bash
++----------------------------+--------------------------------+-----------+
+|             ID             |          DESCRIPTION           |  STATUS   |
++----------------------------+--------------------------------+-----------+
+| "5e9fd6befd2f076d1f03bd8a" | Get the MongoDB connection     | pending   |
+|                            | string using the Azure CLI     |           |
++----------------------------+--------------------------------+-----------+
+```
+
 ## Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
