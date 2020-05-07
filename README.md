@@ -1,53 +1,128 @@
 ---
 page_type: sample
 languages:
-- csharp
+- go
 products:
-- dotnet
-description: "Add 150 character max description"
+- azure
+description: "Build a Go application with MongoDB"
 urlFragment: "update-this-to-unique-url-stub"
 ---
 
-# Official Microsoft Sample
+# Quickstart: Connect a Go application to Azure Cosmos DB's API for MongoDB
 
-<!-- 
-Guidelines on README format: https://review.docs.microsoft.com/help/onboard/admin/samples/concepts/readme-template?branch=master
-
-Guidance on onboarding samples to docs.microsoft.com/samples: https://review.docs.microsoft.com/help/onboard/admin/samples/process/onboarding?branch=master
-
-Taxonomies for products and languages: https://review.docs.microsoft.com/new-hope/information-architecture/metadata/taxonomies?branch=master
--->
-
-Give a short description for your sample here. What does it do and why is it important?
-
-## Contents
-
-Outline the file contents of the repository. It helps users navigate the codebase, build configuration and any related assets.
-
-| File/folder       | Description                                |
-|-------------------|--------------------------------------------|
-| `src`             | Sample source code.                        |
-| `.gitignore`      | Define what to ignore at commit time.      |
-| `CHANGELOG.md`    | List of changes to the sample.             |
-| `CONTRIBUTING.md` | Guidelines for contributing to the sample. |
-| `README.md`       | This README file.                          |
-| `LICENSE`         | The license for the sample.                |
+The sample application is a command-line based `todo` management tool written in Go. Azure Cosmos DB's API for MongoDB is [compatible with the MongoDB wire protocol](https://docs.microsoft.com/azure/cosmos-db/mongodb-introduction#wire-protocol-compatibility), making it possible for any MongoDB client driver to connect to it. This application uses the [Go driver for MongoDB](https://github.com/mongodb/mongo-go-driver) in a way that is transparent to the application that the data is stored in an Azure Cosmos DB database.
 
 ## Prerequisites
 
-Outline the required components and tools that a user might need to have on their machine in order to run the sample. This can be anything from frameworks, SDKs, OS versions or IDE releases.
+- An Azure account with an active subscription. [Create one for free](https://azure.microsoft.com/free). Or [try Azure Cosmos DB for free](https://azure.microsoft.com/try/cosmosdb/) without an Azure subscription. You can also use the [Azure Cosmos DB Emulator](https://aka.ms/cosmosdb-emulator) with the connection string `.mongodb://localhost:C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==@localhost:10255/admin?ssl=true`.
+- [Go](https://golang.org/) installed on your computer, and a working knowledge of Go.
+- [Git](https://git-scm.com/downloads).
+- If you don't want to use Azure Cloud Shell, [Azure CLI 2.0+](/cli/azure/install-azure-cli).
 
 ## Setup
 
-Explain how to prepare the sample once the user clones or downloads the repository. The section should outline every step necessary to install dependencies and set up any settings (for example, API keys and output folders).
+Clone the application
+
+```bash
+git clone https://github.com/Azure-Samples/cosmosdb-go-mongodb-quickstart
+```
+
+Change into the directory where you cloned the application and build it (using `go build`).
+
+```bash
+cd monogdb-go-quickstart
+go build -o todo
+```
+
+To confirm that the application was built properly.
+
+```bash
+./todo --help
+```
+
+To configure the application, export the connection string, MongoDB database and collection names as environment variables. 
+
+```bash
+export MONGODB_CONNECTION_STRING="mongodb://<COSMOSDB_ACCOUNT_NAME>:<COSMOSDB_PASSWORD>@<COSMOSDB_ACCOUNT_NAME>.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&maxIdleTimeMS=120000&appName=@<COSMOSDB_ACCOUNT_NAME>@"
+```
+
+> [!NOTE] 
+> The `ssl=true` option is important because of Cosmos DB requirements. For more information, see [Connection string requirements](connect-mongodb-account.md#connection-string-requirements).
+>
+
+For the `MONGODB_CONNECTION_STRING` environment variable, replace the placeholders for `<COSMOSDB_ACCOUNT_NAME>` and `<COSMOSDB_PASSWORD>`
+
+1. `<COSMOSDB_ACCOUNT_NAME>`: The name of the Azure Cosmos DB account
+2. `<COSMOSDB_PASSWORD>`: The Azure Cosmos DB database key
+
+```bash
+export MONGODB_DATABASE=todo-db
+export MONGODB_COLLECTION=todos
+```
+
+You can choose your preferred values for `MONGODB_DATABASE` and `MONGODB_COLLECTION` or leave them as is.
 
 ## Running the sample
 
-Outline step-by-step instructions to execute the sample and see its output. Include steps for executing the sample from the IDE, starting specific services in the Azure portal or anything related to the overall launch of the code.
+To create a `todo`
 
-## Key concepts
+```bash
+./todo --create "Create an Azure Cosmos DB database account"
+```
 
-Provide users with more context on the tools and services used in the sample. Explain some of the code that is being used and how services interact with each other.
+If successful, you should see an output with the MongoDB `_id` of the newly created document:
+
+```bash
+added todo ObjectID("5e9fd6befd2f076d1f03bd8a")
+```
+
+Create another `todo`
+
+```bash
+./todo --create "Get the MongoDB connection string using the Azure CLI"
+```
+
+List all the `todo`s
+
+```bash
+./todo --list all
+```
+
+You should see the ones you just added in a tabular format as such
+
+```bash
++----------------------------+--------------------------------+-----------+
+|             ID             |          DESCRIPTION           |  STATUS   |
++----------------------------+--------------------------------+-----------+
+| "5e9fd6b1bcd2fa6bd267d4c4" | Create an Azure Cosmos DB      | pending   |
+|                            | database account               |           |
+| "5e9fd6befd2f076d1f03bd8a" | Get the MongoDB connection     | pending   |
+|                            | string using the Azure CLI     |           |
++----------------------------+--------------------------------+-----------+
+```
+
+To update the status of a `todo` (e.g. change it to `completed` status), use the `todo` ID
+
+```bash
+./todo --update 5e9fd6b1bcd2fa6bd267d4c4,completed
+```
+
+List only the completed `todo`s
+
+```bash
+./todo --list completed
+```
+
+You should see the one you just updated
+
+```bash
++----------------------------+--------------------------------+-----------+
+|             ID             |          DESCRIPTION           |  STATUS   |
++----------------------------+--------------------------------+-----------+
+| "5e9fd6b1bcd2fa6bd267d4c4" | Create an Azure Cosmos DB      | completed |
+|                            | database account               |           |
++----------------------------+--------------------------------+-----------+
+```
 
 ## Contributing
 
