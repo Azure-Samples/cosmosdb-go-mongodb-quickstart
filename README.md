@@ -46,9 +46,7 @@ To configure the application, export the connection string, MongoDB database and
 export MONGODB_CONNECTION_STRING="mongodb://<COSMOSDB_ACCOUNT_NAME>:<COSMOSDB_PASSWORD>@<COSMOSDB_ACCOUNT_NAME>.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&maxIdleTimeMS=120000&appName=@<COSMOSDB_ACCOUNT_NAME>@"
 ```
 
-> [!NOTE] 
 > The `ssl=true` option is important because of Cosmos DB requirements. For more information, see [Connection string requirements](connect-mongodb-account.md#connection-string-requirements).
->
 
 For the `MONGODB_CONNECTION_STRING` environment variable, replace the placeholders for `<COSMOSDB_ACCOUNT_NAME>` and `<COSMOSDB_PASSWORD>`
 
@@ -72,7 +70,7 @@ To create a `todo`
 
 If successful, you should see an output with the MongoDB `_id` of the newly created document:
 
-```bash
+```
 added todo ObjectID("5e9fd6befd2f076d1f03bd8a")
 ```
 
@@ -90,7 +88,7 @@ List all the `todo`s
 
 You should see the ones you just added in a tabular format as such
 
-```bash
+```
 +----------------------------+--------------------------------+-----------+
 |             ID             |          DESCRIPTION           |  STATUS   |
 +----------------------------+--------------------------------+-----------+
@@ -115,7 +113,7 @@ List only the completed `todo`s
 
 You should see the one you just updated
 
-```bash
+```
 +----------------------------+--------------------------------+-----------+
 |             ID             |          DESCRIPTION           |  STATUS   |
 +----------------------------+--------------------------------+-----------+
