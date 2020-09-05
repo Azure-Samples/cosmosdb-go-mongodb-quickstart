@@ -47,10 +47,10 @@ const (
 )
 
 func main() {
-	todoDescription := flag.String("create", "", createHelp)
-	listCriteria := flag.String("list", "", listHelp)
-	updateInfo := flag.String("update", "", updateHelp)
-	deleteTodo := flag.String("delete", "", deleteHelp)
+	todoDescription := flag.String(createFlag, "", createHelp)
+	listCriteria := flag.String(listFlag, "", listHelp)
+	updateInfo := flag.String(updateFlag, "", updateHelp)
+	deleteTodo := flag.String(deleteFlag, "", deleteHelp)
 
 	flag.Parse()
 
@@ -101,12 +101,15 @@ func connect() *mongo.Client {
 
 	clientOptions := options.Client().ApplyURI(mongoDBConnectionString).SetDirect(true)
 	c, err := mongo.NewClient(clientOptions)
+	if err != nil {
+		log.Fatalf("unable to create client %v", err)
+	}
 
 	err = c.Connect(ctx)
-
 	if err != nil {
 		log.Fatalf("unable to initialize connection %v", err)
 	}
+
 	err = c.Ping(ctx, nil)
 	if err != nil {
 		log.Fatalf("unable to connect %v", err)
@@ -130,7 +133,6 @@ func create(desc string) {
 
 // lists todos
 func list(status string) {
-
 	var filter interface{}
 	switch status {
 	case listAllCriteria:
