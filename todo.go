@@ -100,9 +100,7 @@ func connect() *mongo.Client {
 	defer cancel()
 
 	clientOptions := options.Client().ApplyURI(mongoDBConnectionString).SetDirect(true)
-	c, err := mongo.NewClient(clientOptions)
-
-	err = c.Connect(ctx)
+	c, err := mongo.Connect(ctx, clientOptions)
 
 	if err != nil {
 		log.Fatalf("unable to initialize connection %v", err)
